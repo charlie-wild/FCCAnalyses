@@ -100,6 +100,15 @@ namespace myUtils{
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Bd2MuMu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+                  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+                  ROOT::VecOps::RVec<FCCAnalysesComposite2> D0,
+                  ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0);
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									     ROOT::VecOps::RVec<int> ind);
@@ -285,6 +294,9 @@ namespace myUtils{
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      int type);
 
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite> in,
+						      int type);
+
   ROOT::VecOps::RVec<float> getFCCAnalysesComposite_B(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 						      ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 						      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
@@ -382,6 +394,7 @@ namespace myUtils{
 
   /// return the momenta of the input ReconstructedParticles
   float get_p(edm4hep::ReconstructedParticleData in);
+  float get_E(edm4hep::ReconstructedParticleData in);
 
   ROOT::VecOps::RVec<edm4hep::TrackState> get_truetrack(ROOT::VecOps::RVec<int> in,
 							ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> vertex,

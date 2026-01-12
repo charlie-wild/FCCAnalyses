@@ -957,6 +957,7 @@ ROOT::VecOps::RVec<int> get_compmc(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
 
 }*/
 
+
 ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bu2D0Pi(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 								ROOT::VecOps::RVec<FCCAnalysesComposite> d0,
 								ROOT::VecOps::RVec<int> pions){
@@ -1135,6 +1136,20 @@ ROOT::VecOps::RVec<float> getFCCAnalysesComposite_B(ROOT::VecOps::RVec<FCCAnalys
 
 
 ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+							     int i){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    if (i==0)result.push_back(p.particle.Px());
+    else if (i==1)result.push_back(p.particle.Py());
+    else if (i==2)result.push_back(p.particle.Pz());
+    else result.push_back(sqrt(pow(p.particle.Px(),2)+
+			       pow(p.particle.Py(),2)+
+			       pow(p.particle.Pz(),2)));
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalysesComposite> in,
 							     int i){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -1690,6 +1705,123 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
   return result;
 }
 
+ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 2 tracks
+    if (p.ntracks!=2){counter+=1;continue;}
+
+    //2 tracks id as K+ K-
+    int charge_KK=0;
+    int nobj_KK=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==321){
+	nobj_KK+=1;
+	charge_KK+=recop.at(r).charge;
+      }
+    }
+
+    if (nobj_KK!=2){counter+=1; continue;}
+
+    if (charge_KK!=0){counter+=1; continue;}
+
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_KK;
+
+    if (fabs(comp.particle.M()-1.86483)>0.012){counter+=1; continue;}
+
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t j = 0; j < recop.size(); ++j) {
+    if (recop.at(j).type!=22)continue;
+    if (get_E(recop.at(j))<0.03)continue;
+    TLorentzVector tlvphoton1 = ReconstructedParticle::get_tlv(recop.at(j));
+    for (size_t k = j+1; k < recop.size(); ++k) {
+      if (recop.at(k).type!=22)continue;
+      if (get_E(recop.at(k))<0.03)continue;  
+      TLorentzVector tlvphoton2 = ReconstructedParticle::get_tlv(recop.at(k));   
+      TLorentzVector tlvpi0 = tlvphoton1 + tlvphoton2;
+
+      //Mass cut
+      if (tlvpi0.M()<0.115 || tlvpi0.M()>0.15)continue;
+
+      FCCAnalysesComposite Pi0;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(j);
+      index.push_back(k);
+      Pi0.particle = tlvpi0;
+      Pi0.index = index;
+      result.push_back(Pi0);
+    }
+
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+                ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+								ROOT::VecOps::RVec<FCCAnalysesComposite2> D0,
+								ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+  for (size_t i = 0; i < D0.size(); ++i) {
+    const int& d0vertex = D0.at(i).vertex;
+    const int& d0index1 = vertex[d0vertex].reco_ind[0];
+    const int& d0index2 = vertex[d0vertex].reco_ind[1];
+    float kaoncharge = 0;
+    float kaonnumber = 0;
+    //std::cout << "index sise "<< d0index.size() << " ind 0 " << d0index.at(0)<< " ind 1 " << d0index.at(1)  <<std::endl;
+    //std::cout << " recop.at(index.at(0)) "<<recop.at(d0index.at(0)).type<< " recop.at(index.at(1)) "<<recop.at(d0index.at(1)).type<< std::endl;
+
+    if (recop.at(d0index1).type==321){
+      kaoncharge+=recop.at(d0index1).charge;
+      kaonnumber+=1;
+    }
+    if (recop.at(d0index2).type==321){
+      kaoncharge+=recop.at(d0index2).charge;
+      kaonnumber+=1;
+    }
+    if (kaoncharge!=0 || kaonnumber!=2) std::cout <<"huston there is a problem two oppositiely charged kaons not found in build_B02D0Pi0" <<std::endl;
+
+    for (size_t j = 0; j < Pi0.size(); ++j) {
+      ROOT::VecOps::RVec<int> pi0index = Pi0.at(j).index;
+
+      TLorentzVector tlvd0   = D0.at(i).particle;
+      TLorentzVector tlvpi0   = Pi0.at(j).particle;
+      TLorentzVector tlvB = tlvpi0+tlvd0;
+
+      FCCAnalysesComposite B;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(d0index1);
+      index.push_back(d0index2);
+      index.push_back(pi0index.at(0));
+      index.push_back(pi0index.at(1));
+      B.particle = tlvB;
+      B.index = index;
+      result.push_back(B);
+
+    }
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
 
@@ -2171,6 +2303,11 @@ ROOT::VecOps::RVec<float> get_pz(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::
   for (auto &p:in)
     result.push_back(p.at(index).momentum.z);
   return result;
+}
+
+float get_E(edm4hep::ReconstructedParticleData in) {
+  float energy = in.energy;
+  return energy;
 }
 
 
