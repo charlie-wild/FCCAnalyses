@@ -158,6 +158,14 @@ namespace MCParticle{
   /// return the z of the input MCParticles
   ROOT::VecOps::RVec<float> get_endPoint_z(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 
+  ROOT::VecOps::RVec<float> get_FD_x(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+  ROOT::VecOps::RVec<float> get_FD_y(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+  ROOT::VecOps::RVec<float> get_FD_z(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
+  ROOT::VecOps::RVec<float> get_FD(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
+
   /// return the transverse momenta of the input MCParticles
   ROOT::VecOps::RVec<float> get_pt(ROOT::VecOps::RVec<edm4hep::MCParticleData> in);
 

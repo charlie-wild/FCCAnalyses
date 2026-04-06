@@ -173,7 +173,6 @@ ROOT::VecOps::RVec<float> get_Vertex_d2PV(ROOT::VecOps::RVec<VertexingUtils::FCC
   return result;
 }
 
-
 ROOT::VecOps::RVec<float> get_Vertex_d2PVError(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 							int comp){
   ROOT::VecOps::RVec<float> result;
@@ -203,6 +202,8 @@ ROOT::VecOps::RVec<float> get_Vertex_d2MC(ROOT::VecOps::RVec<VertexingUtils::FCC
 
   return result;
 }
+
+
 
 ROOT::VecOps::RVec<int> get_Vertex_indMC(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<int> result;
@@ -742,7 +743,6 @@ ROOT::VecOps::RVec<float> get_flightDistanceVertex(ROOT::VecOps::RVec<FCCAnalyse
 
 }
 
-
 ROOT::VecOps::RVec<int> getMC_daughter(int daughterindex,
 						ROOT::VecOps::RVec<edm4hep::MCParticleData> in,
 						ROOT::VecOps::RVec<int> ind){
@@ -1042,6 +1042,23 @@ ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAna
   return result;
 }
 
+ROOT::VecOps::RVec<int> getFCCAnalysesComposite_vtxind(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<int> result;
+  for (auto & p: in) {
+    result.push_back(p.vertex);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtxFDinfo(ROOT::VecOps::RVec<FCCAnalysesComposite2> in, ROOT::VecOps::RVec<float> FD_info){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(FD_info.at(p.vertex));
+  }
+  return result;
+}
+
+
 ROOT::VecOps::RVec<float> getFCCAnalysesComposite_mass(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
   ROOT::VecOps::RVec<float> result;
@@ -1159,6 +1176,159 @@ ROOT::VecOps::RVec<float> getFCCAnalysesComposite_p(ROOT::VecOps::RVec<FCCAnalys
     else result.push_back(sqrt(pow(p.particle.Px(),2)+
 			       pow(p.particle.Py(),2)+
 			       pow(p.particle.Pz(),2)));
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_E(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.E());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_E(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.E());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Pt(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Pt());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Pt(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Pt());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Phi(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Phi());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Phi(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Phi());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Eta(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Eta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Eta(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Eta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Theta(ROOT::VecOps::RVec<FCCAnalysesComposite> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Theta());
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Theta(ROOT::VecOps::RVec<FCCAnalysesComposite2> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.particle.Theta());
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_position(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces, int i){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float position;
+    if (i == 1){
+      position = verteces.at(p.vertex).vertex.position.x;
+    } 
+    if (i ==2){
+      position = verteces.at(p.vertex).vertex.position.y;
+    }
+    if (i ==3){
+      position = verteces.at(p.vertex).vertex.position.z;
+    }
+    
+    result.push_back(position);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_FD_info(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces, int i){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float position;
+    if (i == 1){
+      position = verteces.at(p.vertex).vertex.position.x;
+    } 
+    if (i ==2){
+      position = verteces.at(p.vertex).vertex.position.y;
+    }
+    if (i ==3){
+      position = verteces.at(p.vertex).vertex.position.z;
+    }
+    
+    result.push_back(position);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_position_err(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces, int i){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    float error;
+    if (i == 1){
+      error = sqrt(verteces.at(p.vertex).vertex.covMatrix[0]);
+    } 
+    if (i ==2){
+      error = sqrt(verteces.at(p.vertex).vertex.covMatrix[1]);
+    }
+    if (i ==3){
+      error = sqrt(verteces.at(p.vertex).vertex.covMatrix[2]);
+    }
+    
+    result.push_back(error);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_chi2(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
+								ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+
+    float  chi2 = verteces.at(p.vertex).vertex.chi2;
+    
+    result.push_back(chi2);
   }
   return result;
 }
@@ -1706,7 +1876,7 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstee(ROOT::VecOps::RVec<Verte
 }
 
 ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
-								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
 
@@ -1735,16 +1905,83 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<Vertexi
     comp.vertex = counter;
     comp.particle = build_tlv(recop,p.reco_ind);
     comp.charge = charge_KK;
-
-    if (fabs(comp.particle.M()-1.86483)>0.012){counter+=1; continue;}
-
+    if (mass_cut){
+      if (fabs(comp.particle.M()-1.86483)>0.012){counter+=1; continue;}
+    }
     result.push_back(comp);
     counter+=1;
   }
   return result;
 }
 
-ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut, bool momentum_cut){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t j = 0; j < recop.size(); ++j) {
+    if (recop.at(j).type!=22)continue;
+    if (get_E(recop.at(j))<0.03)continue;
+    TLorentzVector tlvphoton1 = ReconstructedParticle::get_tlv(recop.at(j));
+    for (size_t k = j+1; k < recop.size(); ++k) {
+      if (recop.at(k).type!=22)continue;
+      if (get_E(recop.at(k))<0.03)continue;  
+      TLorentzVector tlvphoton2 = ReconstructedParticle::get_tlv(recop.at(k));   
+      TLorentzVector tlvpi0 = tlvphoton1 + tlvphoton2;
+
+      //Mass cut
+      if(mass_cut){
+        if (tlvpi0.M()<0.115 || tlvpi0.M()>0.15)continue;
+      }
+      if(momentum_cut){
+        if (tlvpi0.P()< 3)continue;
+      }
+      FCCAnalysesComposite Pi0;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(j);
+      index.push_back(k);
+      Pi0.particle = tlvpi0;
+      Pi0.index = index;
+      result.push_back(Pi0);
+    }
+
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_wider(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t j = 0; j < recop.size(); ++j) {
+    if (recop.at(j).type!=22)continue;
+    if (get_E(recop.at(j))<0.03)continue;
+    TLorentzVector tlvphoton1 = ReconstructedParticle::get_tlv(recop.at(j));
+    for (size_t k = j+1; k < recop.size(); ++k) {
+      if (recop.at(k).type!=22)continue;
+      if (get_E(recop.at(k))<0.03)continue;  
+      TLorentzVector tlvphoton2 = ReconstructedParticle::get_tlv(recop.at(k));   
+      TLorentzVector tlvpi0 = tlvphoton1 + tlvphoton2;
+
+      //Mass cut
+      if (tlvpi0.P()< 3)continue;
+      //if (tlvpi0.M()<0.088 || tlvpi0.M()>0.180)continue;
+
+      FCCAnalysesComposite Pi0;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(j);
+      index.push_back(k);
+      Pi0.particle = tlvpi0;
+      Pi0.index = index;
+      result.push_back(Pi0);
+    }
+
+  }
+  return result;
+}
+
+
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_3(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> result;
 
@@ -1760,6 +1997,73 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RV
 
       //Mass cut
       if (tlvpi0.M()<0.115 || tlvpi0.M()>0.15)continue;
+
+      if (tlvpi0.P()< 3)continue;
+
+      FCCAnalysesComposite Pi0;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(j);
+      index.push_back(k);
+      Pi0.particle = tlvpi0;
+      Pi0.index = index;
+      result.push_back(Pi0);
+    }
+
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_5(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t j = 0; j < recop.size(); ++j) {
+    if (recop.at(j).type!=22)continue;
+    if (get_E(recop.at(j))<0.03)continue;
+    TLorentzVector tlvphoton1 = ReconstructedParticle::get_tlv(recop.at(j));
+    for (size_t k = j+1; k < recop.size(); ++k) {
+      if (recop.at(k).type!=22)continue;
+      if (get_E(recop.at(k))<0.03)continue;  
+      TLorentzVector tlvphoton2 = ReconstructedParticle::get_tlv(recop.at(k));   
+      TLorentzVector tlvpi0 = tlvphoton1 + tlvphoton2;
+
+      //Mass cut
+      if (tlvpi0.M()<0.115 || tlvpi0.M()>0.15)continue;
+
+      if (tlvpi0.P()< 5)continue;
+
+      FCCAnalysesComposite Pi0;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(j);
+      index.push_back(k);
+      Pi0.particle = tlvpi0;
+      Pi0.index = index;
+      result.push_back(Pi0);
+    }
+
+  }
+  return result;
+}
+
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_7(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t j = 0; j < recop.size(); ++j) {
+    if (recop.at(j).type!=22)continue;
+    if (get_E(recop.at(j))<0.03)continue;
+    TLorentzVector tlvphoton1 = ReconstructedParticle::get_tlv(recop.at(j));
+    for (size_t k = j+1; k < recop.size(); ++k) {
+      if (recop.at(k).type!=22)continue;
+      if (get_E(recop.at(k))<0.03)continue;  
+      TLorentzVector tlvphoton2 = ReconstructedParticle::get_tlv(recop.at(k));   
+      TLorentzVector tlvpi0 = tlvphoton1 + tlvphoton2;
+
+      //Mass cut
+      if (tlvpi0.M()<0.115 || tlvpi0.M()>0.15)continue;
+
+      if (tlvpi0.P()< 7)continue;
 
       FCCAnalysesComposite Pi0;
       ROOT::VecOps::RVec<int> index;
@@ -1778,9 +2082,14 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RV
 ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
                 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
 								ROOT::VecOps::RVec<FCCAnalysesComposite2> D0,
-								ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0){
+								ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0, 
+                ROOT::VecOps::RVec<float>& thrust,
+                bool mass_cut, 
+                bool momentum_cut
+              ){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
   for (size_t i = 0; i < D0.size(); ++i) {
     const int& d0vertex = D0.at(i).vertex;
     const int& d0index1 = vertex[d0vertex].reco_ind[0];
@@ -1807,19 +2116,266 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<Verte
       TLorentzVector tlvpi0   = Pi0.at(j).particle;
       TLorentzVector tlvB = tlvpi0+tlvd0;
 
+      if (mass_cut){
+        if(tlvB.M()>5.9 || tlvB.M()<4.7)continue;
+      }
+      if (momentum_cut){
+        if (tlvB.P() < 12)continue;
+      }
+
       FCCAnalysesComposite B;
       ROOT::VecOps::RVec<int> index;
+      index.push_back(i);
       index.push_back(d0index1);
       index.push_back(d0index2);
+      index.push_back(j);
       index.push_back(pi0index.at(0));
       index.push_back(pi0index.at(1));
       B.particle = tlvB;
       B.index = index;
-      result.push_back(B);
 
+      if(D0_and_Pi0_same_hemisphere(B, D0.at(i), Pi0.at(j), thrust)==0)continue;
+
+      result.push_back(B);
     }
   }
+
   return result;
+}
+
+ROOT::VecOps::RVec<int> get_daughter_index_from_B0Candidate(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0Candidate, int daughter_index){
+
+  ROOT::VecOps::RVec<int> results;
+
+  for(auto& B0 : B0Candidate){
+    int ind = B0.index[daughter_index];
+    results.push_back(ind);
+  }
+
+  return results;
+
+}
+
+ROOT::VecOps::RVec<int> variable_access_B0_Daughters_int(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<int>& daughter_integer_variable){
+
+  ROOT::VecOps::RVec<int> results; 
+
+  for(auto& i: index_of_daughter){
+
+    int variable_value; 
+
+    variable_value = daughter_integer_variable.at(i);
+
+    results.push_back(variable_value);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<float> variable_access_B0_Daughters_flt(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<float>& daughter_integer_variable){
+
+  ROOT::VecOps::RVec<float> results; 
+
+  for(auto& i: index_of_daughter){
+
+    float variable_value; 
+
+    variable_value = daughter_integer_variable.at(i);
+
+    results.push_back(variable_value);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<int> indRP_matched_to_list( ROOT::VecOps::RVec<int>&  mcParticles_indices,
+						 ROOT::VecOps::RVec<int>& recind,
+						 ROOT::VecOps::RVec<int>& mcind,
+						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco,
+						 ROOT::VecOps::RVec<edm4hep::MCParticleData>& mc) {
+
+  ROOT::VecOps::RVec<int>  results;
+
+  int dummy;
+  dummy = -9999;
+
+  for ( auto & idx: mcParticles_indices ) {
+
+    // exclude unstable particles - e.g. the list may contain the index of
+    // the mother
+    if ( mc.at(idx).generatorStatus != 1 ) continue ;
+
+    // is this MC particle associated with a Reco particle :
+    bool found = false;
+    for (int i=0; i<recind.size();i++) {
+      int reco_idx = recind.at(i);
+      int mc_idx = mcind.at(i);
+      if ( mc_idx == idx ) {
+        found = true;
+        results.push_back( reco_idx );
+        break;
+      }
+    }
+    // no Reco particle has been found for idx: add a dummy particle such that
+    // one preserves the mapping with the input list
+    if ( ! found) results.push_back( dummy );
+
+
+  } // loop over the indices in the list
+
+  return results;
+
+}
+
+bool array_searcher(int index, ROOT::VecOps::RVec<int> index_array){
+
+  bool result;
+  result = false;
+
+  for (size_t i = 0; i < index_array.size(); ++i){
+    if( index_array.at(i)==index){
+      result = true;
+    }
+  }
+
+  return result;
+}
+
+ROOT::VecOps::RVec<int> truthmatch_D0(ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex){
+  
+  ROOT::VecOps::RVec<int> results;
+
+  for (size_t i = 0; i < D0.size(); ++i) {
+    const int& d0vertex = D0.at(i).vertex;
+    const int& d0index1 = vertex[d0vertex].reco_ind[0];
+    const int& d0index2 = vertex[d0vertex].reco_ind[1];
+    if(RP_truthmatched_indices.size()!=0){
+      bool d0index1_found = array_searcher(d0index1, RP_truthmatched_indices);
+      bool d0index2_found = array_searcher(d0index2, RP_truthmatched_indices);
+
+      if(d0index1_found && d0index2_found){
+        results.push_back(1);
+      } else {
+        results.push_back(0);
+      }
+    }else{
+      results.push_back(0);
+    }
+  }
+  
+  return results;
+}
+
+ROOT::VecOps::RVec<int> truthmatch_Pi0(ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices){
+  
+  ROOT::VecOps::RVec<int> results;
+
+  for (size_t i = 0; i < Pi0.size(); ++i) {
+    const int& pi0index1 = Pi0.at(i).index.at(0);
+    const int& pi0index2 = Pi0.at(i).index.at(1);
+
+    if(RP_truthmatched_indices.size()!=0){
+
+      bool pi0index1_found = array_searcher(pi0index1, RP_truthmatched_indices);
+      bool pi0index2_found = array_searcher(pi0index2, RP_truthmatched_indices);
+
+      if(pi0index1_found && pi0index2_found){
+        results.push_back(1);
+      } else {
+        results.push_back(0);
+      }
+    }else{
+      results.push_back(0);
+    }
+  }
+  
+  return results;
+}
+
+ROOT::VecOps::RVec<int> truthmatch_B0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices){
+  
+  ROOT::VecOps::RVec<int> results;
+
+  for (size_t i = 0; i < B0.size(); ++i) {
+    const int& B0index1 = B0.at(i).index.at(1);
+    const int& B0index2 = B0.at(i).index.at(2);
+    const int& B0index3 = B0.at(i).index.at(4);
+    const int& B0index4 = B0.at(i).index.at(5);
+
+    if(RP_truthmatched_indices.size()!=0){
+
+      bool B0index1_found = array_searcher(B0index1, RP_truthmatched_indices);
+      bool B0index2_found = array_searcher(B0index2, RP_truthmatched_indices);
+      bool B0index3_found = array_searcher(B0index3, RP_truthmatched_indices);
+      bool B0index4_found = array_searcher(B0index4, RP_truthmatched_indices);
+
+      if(B0index1_found && B0index2_found && B0index3_found && B0index4_found){
+        results.push_back(1);
+      } else {
+        results.push_back(0);
+      }
+    }else{
+      results.push_back(0);
+    }
+  }
+  
+  return results;
+
+}
+
+ROOT::VecOps::RVec<int> D0_and_Pi0_same_hemisphere(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+								ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<float>& thrust){
+
+  ROOT::VecOps::RVec<int> result;
+
+  for(size_t i = 0; i < B0_candidates.size(); ++i){
+
+    int D0index = B0_candidates.at(i).index.at(0);
+    int Pi0index = B0_candidates.at(i).index.at(3);
+
+    FCCAnalysesComposite2 D0 = D0_candidates.at(D0index);
+    FCCAnalysesComposite Pi0 = Pi0_candidates.at(Pi0index);
+
+    TVector3 thrustvec(thrust.at(1),thrust.at(3),thrust.at(5));
+    TVector3 cand_D0(D0.particle.X(),D0.particle.Y(),D0.particle.Z());
+    float D0_angle = cand_D0.Angle(thrustvec);
+    TVector3 cand_Pi0(Pi0.particle.X(),Pi0.particle.Y(),Pi0.particle.Z());
+    float Pi0_angle = cand_Pi0.Angle(thrustvec);
+
+    if ((cos(D0_angle)*cos(Pi0_angle))>0){
+      result.push_back(1);
+    } else {
+      result.push_back(0);
+    }
+
+  }
+
+  return result;
+
+}
+
+int D0_and_Pi0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesComposite2& D0,
+								FCCAnalysesComposite& Pi0, ROOT::VecOps::RVec<float>& thrust){
+
+  int result;
+
+  TVector3 thrustvec(thrust.at(1),thrust.at(3),thrust.at(5));
+  TVector3 cand_D0(D0.particle.X(),D0.particle.Y(),D0.particle.Z());
+  float D0_angle = cand_D0.Angle(thrustvec);
+  TVector3 cand_Pi0(Pi0.particle.X(),Pi0.particle.Y(),Pi0.particle.Z());
+  float Pi0_angle = cand_Pi0.Angle(thrustvec);
+
+  if ((cos(D0_angle)*cos(Pi0_angle))>0){
+    result=1;
+  } else {
+    result=0;
+  }
+  return result;
+
 }
 
 ROOT::VecOps::RVec<FCCAnalysesComposite2> build_B2Kstmumu(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
@@ -2318,6 +2874,8 @@ float get_p(edm4hep::ReconstructedParticleData in) {
 }
 
 
+
+
 ROOT::VecOps::RVec<float> getFCCAnalysesComposite_anglethrust(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 								       ROOT::VecOps::RVec<float> thrust){
   ROOT::VecOps::RVec<float> result;
@@ -2334,6 +2892,714 @@ int has_anglethrust_emin(ROOT::VecOps::RVec<float> angle){
   for (auto &p:angle)
     if (cos(p)>0.)return 1;
   return -1;
+}
+
+TVector3 get_MC_PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+						   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+						   ROOT::VecOps::RVec<int> mcind){
+  ROOT::VecOps::RVec<float> result;
+  TVector3 mc_pv;
+
+  for (size_t i = 0; i < vertex.size(); ++i){
+    
+    if (vertex.at(i).vertex.primary) {
+      TVector3 mc_pv = mcver.at(mcind.at(i)).vertex;
+    }
+  }
+  return mc_pv;
+}
+
+float get_B0D0_FD_x(TVector3 PV, edm4hep::MCParticleData K){
+  float result;
+
+  result = (K.vertex.x-PV.X());
+  
+  return result;
+}
+
+float get_B0D0_FD_y(TVector3 PV, edm4hep::MCParticleData K){
+  float result;
+
+  result = (K.vertex.y-PV.Y());
+  
+  return result;
+}
+
+float get_B0D0_FD_z(TVector3 PV, edm4hep::MCParticleData K){
+  float result;
+
+  result = (K.vertex.z-PV.Z());
+  
+  return result;
+}
+
+float get_B0D0_FD(TVector3 PV, edm4hep::MCParticleData K){
+  float result;
+
+  result = (sqrt(pow(K.vertex.x-PV.X(),2)+pow(K.vertex.y-PV.Y(),2)+pow(K.vertex.z-PV.Z(),2)));
+  return result;
+}
+
+VertexingUtils::FCCAnalysesVertex get_PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex){
+  VertexingUtils::FCCAnalysesVertex PV;
+
+  for (size_t i = 0; i < vertex.size(); ++i){
+    
+    if (vertex.at(i).vertex.primary) {
+      PV = vertex.at(i);
+    }
+  }
+  return PV;
+}
+
+ROOT::VecOps::RVec<float> get_IP(VertexingUtils::FCCAnalysesVertex PV, ROOT::VecOps::RVec<FCCAnalysesComposite2> D0, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertices){
+  ROOT::VecOps::RVec<float> result;
+
+  TVector3 PV_vec = TVector3( 
+    PV.vertex.position.x,
+    PV.vertex.position.y,
+    PV.vertex.position.z
+  );
+
+  for (auto& p: D0){
+
+    TVector3 D0_decay = TVector3( 
+      vertices.at(p.vertex).vertex.position.x,
+      vertices.at(p.vertex).vertex.position.y,
+      vertices.at(p.vertex).vertex.position.z
+    );//Here i need the reconstructed origin vertex of the D0
+
+    TVector3 D0_momentum = TVector3( 
+      p.particle.Px(), 
+      p.particle.Py(), 
+      p.particle.Pz()
+    );
+
+    TVector3 uhat = D0_momentum.Unit();
+    TVector3 a = PV_vec - D0_decay;
+    TVector3 ipVec = a - (a.Dot(uhat)) * uhat;
+    
+    result.push_back(ipVec.Mag());
+  }
+
+  return result;
+  
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_D0Tracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,
+  ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0Candidates, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks){
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result; 
+
+    for (const auto& D0 : D0Candidates){
+
+      ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> D0_RP;
+
+      const int& d0vertex = D0.vertex;
+
+      for (const auto& daughterindex : vertex[d0vertex].reco_ind){
+
+        D0_RP.push_back(recop[daughterindex]);
+      }
+      
+      ROOT::VecOps::RVec<edm4hep::TrackState> D0Tracks = ReconstructedParticle2Track::getRP2TRK( D0_RP, tracks);
+
+      result.push_back(D0Tracks);
+  
+  }
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState> get_D0Tracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,
+  FCCAnalysesComposite2& D0, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks){
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result; 
+
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> D0_RP;
+
+  const int& d0vertex = D0.vertex;
+
+  for (const auto& daughterindex : vertex[d0vertex].reco_ind){
+
+    D0_RP.push_back(recop[daughterindex]);
+  }
+  
+  ROOT::VecOps::RVec<edm4hep::TrackState> D0Tracks = ReconstructedParticle2Track::getRP2TRK( D0_RP, tracks);
+
+  result = D0Tracks;
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>  ReconstructedD0( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>&  tracks_vectors, bool AddMassConstraints) {
+
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result;
+
+  for(const auto& tracks: tracks_vectors){
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> candidate_result;
+
+    int Ntr = tracks.size();
+    if ( Ntr != 2 ){
+      candidate_result.push_back({});
+      result.push_back(candidate_result);
+      continue;
+    }
+ 
+    TVectorD** trkPar = new TVectorD*[Ntr];
+    TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
+
+    bool Units_mm = true;
+
+    for (Int_t i = 0; i < Ntr; i++) {
+      edm4hep::TrackState t = tracks[i] ;
+      TVectorD par = FCCAnalyses::VertexingUtils::get_trackParam( t, Units_mm ) ;
+      trkPar[i] = new TVectorD( par );
+      TMatrixDSym Cov = FCCAnalyses::VertexingUtils::get_trackCov( t, Units_mm );
+      trkCov[i] = new TMatrixDSym ( Cov );
+    }
+
+    VertexFit theVertexFit( Ntr, trkPar, trkCov );
+    TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
+
+    VertexFit* vertexfit = &theVertexFit;
+    VertexMore vertexmore( vertexfit, Units_mm );
+
+    if ( AddMassConstraints ) {
+        
+      const double kaon_mass = 4.9367700e-01 ;
+      const double D0_mass = 1.86484;
+
+      double D0_masses[2] = { kaon_mass, kaon_mass };
+      int D0_list[2] = { 0, 1};
+      vertexmore.AddMassConstraint(D0_mass, 2, D0_masses, D0_list);   // D0 mass constraint
+
+      vertexmore.MassConstrFit();
+    }
+
+    TVectorD  D0_track_param  = vertexmore.GetVpar();
+
+    TMatrixDSym cov = vertexmore.GetVcov();
+    if (D0_track_param.GetNrows() < 5) {
+        candidate_result.push_back({});
+        result.push_back(candidate_result);
+        continue;
+    }
+    TVectorD  D0_track_param_edm4hep = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam( D0_track_param, Units_mm );
+    edm4hep::TrackState track;
+    track.D0  = D0_track_param_edm4hep[0] ;
+    track.phi = D0_track_param_edm4hep[1];
+    track.omega  = D0_track_param_edm4hep[2];
+    track.Z0  = D0_track_param_edm4hep[3] ;
+    track.tanLambda = D0_track_param_edm4hep[4] ;
+
+    // now the covariance matrix - lower-triangle :
+
+    TMatrixDSym covM(5);
+    std::array<float, 21> covMatrix = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( cov, Units_mm )  ;
+
+    track.covMatrix = covMatrix ;
+
+    candidate_result.push_back(  track );
+
+    result.push_back(candidate_result);
+
+  }
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints) {
+
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+
+  int Ntr = tracks.size();
+  if ( Ntr != 2 ){
+    result.push_back({});
+    return result;
+  }
+
+  TVectorD** trkPar = new TVectorD*[Ntr];
+  TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
+
+  bool Units_mm = true;
+
+  for (Int_t i = 0; i < Ntr; i++) {
+    edm4hep::TrackState t = tracks[i] ;
+    TVectorD par = FCCAnalyses::VertexingUtils::get_trackParam( t, Units_mm ) ;
+    trkPar[i] = new TVectorD( par );
+    TMatrixDSym Cov = FCCAnalyses::VertexingUtils::get_trackCov( t, Units_mm );
+    trkCov[i] = new TMatrixDSym ( Cov );
+  }
+
+  VertexFit theVertexFit( Ntr, trkPar, trkCov );
+  TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
+
+  VertexFit* vertexfit = &theVertexFit;
+  VertexMore vertexmore( vertexfit, Units_mm );
+
+  if ( AddMassConstraints ) {
+      
+    const double kaon_mass = 4.9367700e-01 ;
+    const double D0_mass = 1.86484;
+
+    double D0_masses[2] = { kaon_mass, kaon_mass };
+    int D0_list[2] = { 0, 1};
+    vertexmore.AddMassConstraint(D0_mass, 2, D0_masses, D0_list);   // D0 mass constraint
+
+    vertexmore.MassConstrFit();
+  }
+
+  TVectorD  D0_track_param  = vertexmore.GetVpar();
+
+  TMatrixDSym cov = vertexmore.GetVcov();
+  if (D0_track_param.GetNrows() < 5) {
+      result.push_back({});
+      return result;
+  }
+  TVectorD  D0_track_param_edm4hep = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam( D0_track_param, Units_mm );
+  edm4hep::TrackState track;
+  track.D0  = D0_track_param_edm4hep[0] ;
+  track.phi = D0_track_param_edm4hep[1];
+  track.omega  = D0_track_param_edm4hep[2];
+  track.Z0  = D0_track_param_edm4hep[3] ;
+  track.tanLambda = D0_track_param_edm4hep[4] ;
+
+  // now the covariance matrix - lower-triangle :
+
+  TMatrixDSym covM(5);
+  std::array<float, 21> covMatrix = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( cov, Units_mm )  ;
+
+  track.covMatrix = covMatrix ;
+
+  result.push_back(track);
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedPi0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints) {
+
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+
+  int Ntr = tracks.size();
+  if ( Ntr != 2 ){
+    result.push_back({});
+    return result;
+  }
+
+  TVectorD** trkPar = new TVectorD*[Ntr];
+  TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
+
+  bool Units_mm = true;
+
+  for (Int_t i = 0; i < Ntr; i++) {
+    edm4hep::TrackState t = tracks[i] ;
+    TVectorD par = FCCAnalyses::VertexingUtils::get_trackParam( t, Units_mm ) ;
+    trkPar[i] = new TVectorD( par );
+    TMatrixDSym Cov = FCCAnalyses::VertexingUtils::get_trackCov( t, Units_mm );
+    trkCov[i] = new TMatrixDSym ( Cov );
+  }
+
+  VertexFit theVertexFit( Ntr, trkPar, trkCov );
+  TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
+
+  VertexFit* vertexfit = &theVertexFit;
+  VertexMore vertexmore( vertexfit, Units_mm );
+
+  if ( AddMassConstraints ) {
+      
+    const double photon_mass = 0 ;
+    const double Pi0_mass = 0.1349768;
+
+    double Pi0_masses[2] = { photon_mass, photon_mass };
+    int Pi0_list[2] = { 0, 1};
+    vertexmore.AddMassConstraint(Pi0_mass, 2, Pi0_masses, Pi0_list);   // Pi0 mass constraint
+
+    vertexmore.MassConstrFit();
+  }
+
+  TVectorD  Pi0_track_param  = vertexmore.GetVpar();
+
+  TMatrixDSym cov = vertexmore.GetVcov();
+  if (Pi0_track_param.GetNrows() < 5) {
+      result.push_back({});
+      return result;
+  }
+  TVectorD  Pi0_track_param_edm4hep = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam( Pi0_track_param, Units_mm );
+  edm4hep::TrackState track;
+  track.D0  = Pi0_track_param_edm4hep[0] ;
+  track.phi = Pi0_track_param_edm4hep[1];
+  track.omega  = Pi0_track_param_edm4hep[2];
+  track.Z0  = Pi0_track_param_edm4hep[3] ;
+  track.tanLambda = Pi0_track_param_edm4hep[4] ;
+
+  // now the covariance matrix - lower-triangle :
+
+  TMatrixDSym covM(5);
+  std::array<float, 21> covMatrix = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( cov, Units_mm )  ;
+
+  track.covMatrix = covMatrix ;
+
+  result.push_back(track);
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<TVector3> Momentum_ReconstructedD0( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& D0_pseudoTracks, bool is_neutral) {
+
+
+  ROOT::VecOps::RVec<TVector3> results;
+
+  for(auto& D0_pseudoTrack: D0_pseudoTracks){
+    if (D0_pseudoTrack.empty()) continue;
+    TVectorD Param = FCCAnalyses::VertexingUtils::get_trackParam(D0_pseudoTrack[0], is_neutral);  // track parameters, Franco's convention
+    TVector3 result;
+    if(is_neutral){
+      result = TrkUtil::ParToP_N(Param);
+    }else{
+      result = FCCAnalyses::VertexingUtils::ParToP(Param);
+    }
+    results.push_back(result);
+  }
+
+ return results;
+
+}
+
+ROOT::VecOps::RVec<float> component_access( ROOT::VecOps::RVec<TVector3> TVectors , int component ) {
+
+  ROOT::VecOps::RVec<float> results;
+
+  for(auto& TVector: TVectors){
+    if (component==1) results.push_back(TVector.X());
+    if (component==2) results.push_back(TVector.Y());
+    if (component==3) results.push_back(TVector.Z());
+  }
+
+ return results;
+
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_photon_fake_tracks_from_Pi0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0Candidates){
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> results; 
+
+  for(const auto& Pi0: Pi0Candidates){
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> result;
+
+    for(auto& photon_index: Pi0.index){
+
+      edm4hep::ReconstructedParticleData photon = recop[photon_index];
+
+      TVector3 P(photon.momentum.x, photon.momentum.y, photon.momentum.z);
+      TVector3 X(photon.referencePoint.x, photon.referencePoint.y, photon.referencePoint.z);
+
+      TrkUtil tu;
+
+      TVectorD track_param = tu.XPtoPar_N(X, P);
+
+      edm4hep::TrackState track; 
+
+      track.location = edm4hep::TrackState::AtCalorimeter;
+      track.D0        = track_param[0] * 1e3 ; // from meters to mm
+      track.phi       = track_param[1];
+      track.omega     = track_param[2]; // Neutral will have no curvature
+
+      track.Z0        = track_param[3] * 1e3  ;   // from meters to mm
+      track.tanLambda = track_param[4];
+
+      track.referencePoint = {
+          static_cast<float>(X.X() * 1e3),
+          static_cast<float>(X.Y() * 1e3),
+          static_cast<float>(X.Z() * 1e3)
+      };
+
+      track.covMatrix = {
+        1e1f, 0.f,   0.f,   0.f,   0.f,   0.f,
+        1e1f, 0.f,   0.f,   0.f,   0.f,
+        1e1f, 0.f,   0.f,   0.f,
+        1e1f, 0.f,   0.f,
+        1e1f, 0.f,
+        1e1f
+      };
+
+      result.push_back(track);
+    }
+
+    results.push_back(result);
+
+  }
+
+  return results;
+
+}
+
+
+ROOT::VecOps::RVec<edm4hep::TrackState> get_photon_fake_tracks_from_Pi0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,FCCAnalysesComposite& Pi0){
+
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+
+  for(auto& photon_index: Pi0.index){
+
+    edm4hep::ReconstructedParticleData photon = recop[photon_index];
+
+    TVector3 P(photon.momentum.x, photon.momentum.y, photon.momentum.z);
+    TVector3 X(photon.referencePoint.x, photon.referencePoint.y, photon.referencePoint.z);
+
+    TrkUtil tu;
+
+    TVectorD track_param = tu.XPtoPar_N(X, P);
+
+    edm4hep::TrackState track; 
+
+    track.location = edm4hep::TrackState::AtCalorimeter;
+    track.D0        = track_param[0] * 1e3 ; // from meters to mm
+    track.phi       = track_param[1];
+    track.omega     = track_param[2]; // Neutral will have no curvature
+
+    track.Z0        = track_param[3] * 1e3  ;   // from meters to mm
+    track.tanLambda = track_param[4];
+
+    track.referencePoint = {
+        static_cast<float>(X.X() * 1e3),
+        static_cast<float>(X.Y() * 1e3),
+        static_cast<float>(X.Z() * 1e3)
+    };
+
+    track.covMatrix = {
+      1e6f, 0.f,   0.f,   0.f,   0.f,   0.f,
+      1e6f, 0.f,   0.f,   0.f,   0.f,
+      1e6f, 0.f,   0.f,   0.f,
+      1e6f, 0.f,   0.f,
+      1e6f, 0.f,
+      1e6f
+    };
+
+    result.push_back(track);
+
+  }
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex(
+                                ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,
+                                ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0) {
+
+ ROOT::VecOps::RVec<edm4hep::TrackState>  result;
+ if ( ReconstructedD0.size() != 1 ) return result;
+ if ( BachelorPi0.size() != 2 )  return result;
+
+ result.push_back( ReconstructedD0[0])  ;  // the pseudo-D0 track
+ result.push_back( BachelorPi0[0] );        // Fake Photon-1
+ result.push_back( BachelorPi0[1] );        // Fake Photon-2
+
+ return result;
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex_pi0(
+                                ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,
+                                ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0) {
+
+ ROOT::VecOps::RVec<edm4hep::TrackState>  result;
+ if ( ReconstructedD0.size() != 1 ) return result;
+ if ( BachelorPi0.size() != 1 )  return result;
+
+ result.push_back( ReconstructedD0[0])  ;  // the pseudo-D0 track
+ result.push_back( BachelorPi0[0] );        // the pseudo-pi0 track
+
+ return result;
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks){
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result;
+
+  for(const auto& B0 : B0_candidates){
+    
+    FCCAnalysesComposite& Pi0 = Pi0_candidates.at(B0.index[3]);
+    FCCAnalysesComposite2& D0 = D0_candidates.at(B0.index[0]);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_tracks = get_D0Tracks(vertex, recopatvtx, D0, tracks);
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_reconstructed_track = ReconstructedD0( D0_tracks, true);
+    ROOT::VecOps::RVec<edm4hep::TrackState> Pi0_fake_tracks = get_photon_fake_tracks_from_Pi0(recop, Pi0);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> B0_tracks = tracks_for_fitting_the_B0_vertex(D0_reconstructed_track, Pi0_fake_tracks);
+
+    result.push_back(B0_tracks);
+
+
+  }
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit_pi0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks){
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result;
+
+  for(const auto& B0 : B0_candidates){
+    
+    FCCAnalysesComposite& Pi0 = Pi0_candidates.at(B0.index[3]);
+    FCCAnalysesComposite2& D0 = D0_candidates.at(B0.index[0]);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_tracks = get_D0Tracks(vertex, recopatvtx, D0, tracks);
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_reconstructed_track = ReconstructedD0( D0_tracks, true);
+    ROOT::VecOps::RVec<edm4hep::TrackState> Pi0_fake_tracks = get_photon_fake_tracks_from_Pi0(recop, Pi0);
+    ROOT::VecOps::RVec<edm4hep::TrackState> Pi0_reconstructed_track = ReconstructedPi0( Pi0_fake_tracks, true);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> B0_tracks = tracks_for_fitting_the_B0_vertex_pi0(D0_reconstructed_track, Pi0_reconstructed_track);
+
+    result.push_back(B0_tracks);
+
+
+  }
+
+  return result;
+
+}
+
+
+
+ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> B0_Vertex_fitter(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks, int num_tracks){
+
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> results;
+
+  for(const auto& tracks : B0_tracks){
+
+    VertexingUtils::FCCAnalysesVertex B0_vertex = VertexFitterSimple::VertexFitter_Tk(num_tracks, tracks);
+
+    results.push_back(B0_vertex);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<int> B0_Vertex_n_tracks(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks){
+
+  ROOT::VecOps::RVec<int> results;
+
+  for(const auto& tracks : B0_tracks){
+
+    int num_tracks = ReconstructedParticle2Track::getTK_n(tracks);
+
+    results.push_back(num_tracks);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<edm4hep::VertexData> B0_Vertex_getter(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& B0_vertices){
+
+  ROOT::VecOps::RVec<edm4hep::VertexData> results;
+
+  for(const auto& vertex : B0_vertices){
+
+    edm4hep::VertexData B0_vertex = VertexingUtils::get_VertexData(vertex);
+
+    results.push_back(B0_vertex);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<float> B0_Vertex_position(ROOT::VecOps::RVec<edm4hep::VertexData>& B0_vertices, int componant){
+
+  ROOT::VecOps::RVec<float> results;
+
+  for(const auto& vertex : B0_vertices){
+    float position;
+
+    if(componant==1){
+      position = vertex.position.x;
+    }
+    if(componant==2){
+      position = vertex.position.y;
+    }
+    if(componant==3){
+      position = vertex.position.z;
+    }
+
+    results.push_back(position);
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<float> B0_Vertex_chi2(ROOT::VecOps::RVec<edm4hep::VertexData>& B0_vertices){
+
+  ROOT::VecOps::RVec<float> results;
+
+  for(const auto& vertex : B0_vertices){
+    float chi2 = vertex.chi2;
+    results.push_back(chi2);
+  }
+
+  return results; 
+
+}
+
+float get_B0_MCVertex_x(edm4hep::MCParticleData D0){
+  float result;
+
+  result = D0.vertex.x;
+  
+  return result;
+}
+
+float get_B0_MCVertex_y(edm4hep::MCParticleData D0){
+  float result;
+
+  result = D0.vertex.y;
+  
+  return result;
+}
+
+float get_B0_MCVertex_z(edm4hep::MCParticleData D0){
+  float result;
+
+  result = D0.vertex.z;
+  
+  return result;
+}
+
+float get_B0_MCVertex(edm4hep::MCParticleData D0){
+  float result;
+
+  result = (sqrt(pow(D0.vertex.x,2)+pow(D0.vertex.y,2)+pow(D0.vertex.z,2)));
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_opening_angle(ROOT::VecOps::RVec<float> Px1, ROOT::VecOps::RVec<float> Px2, ROOT::VecOps::RVec<float>Py1, ROOT::VecOps::RVec<float> Py2, ROOT::VecOps::RVec<float>Pz1, ROOT::VecOps::RVec<float> Pz2, ROOT::VecOps::RVec<float> P1, ROOT::VecOps::RVec<float> P2){
+  ROOT::VecOps::RVec<float> results;
+  for( size_t i = 0; i < P1.size(); ++i){
+    float angle = std::acos((Px1.at(i)*Px2.at(i)+Py1.at(i)*Py2.at(i)+Pz1.at(i)*Pz2.at(i))/(P1.at(i)*P2.at(i)));
+    results.push_back(angle);
+  }
+  return results;
 }
 
 }//end NS myUtils

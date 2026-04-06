@@ -190,7 +190,6 @@ ROOT::VecOps::RVec<edm4hep::MCParticleData> mergeParticles(ROOT::VecOps::RVec<ed
   return ROOT::VecOps::RVec(result);
 }
 
-
 ROOT::VecOps::RVec<float> get_time(ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
   ROOT::VecOps::RVec<float> result;
   for (auto & p: in) {
@@ -308,6 +307,39 @@ ROOT::VecOps::RVec<float> get_endPoint_z(ROOT::VecOps::RVec<edm4hep::MCParticleD
   }
   return result;
 }
+
+ROOT::VecOps::RVec<float> get_FD_x(ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.endpoint.x-p.vertex.x);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_FD_y(ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.endpoint.y-p.vertex.y);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_FD_z(ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(p.endpoint.z-p.vertex.z);
+  }
+  return result;
+}
+
+ROOT::VecOps::RVec<float> get_FD(ROOT::VecOps::RVec<edm4hep::MCParticleData> in){
+  ROOT::VecOps::RVec<float> result;
+  for (auto & p: in) {
+    result.push_back(sqrt(pow(p.endpoint.x-p.vertex.x,2)+pow(p.endpoint.y-p.vertex.y,2)+pow(p.endpoint.z-p.vertex.z,2)));
+  }
+  return result;
+}
+
 
 ROOT::VecOps::RVec<float> get_mass(ROOT::VecOps::RVec<edm4hep::MCParticleData> in) {
   ROOT::VecOps::RVec<float> result;

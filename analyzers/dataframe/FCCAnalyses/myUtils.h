@@ -101,20 +101,50 @@ namespace myUtils{
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
-								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut=true);
 
-  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut=true, bool momentum_cut=true);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_wider(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_3(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_5(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_cut_7(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
                   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
                   ROOT::VecOps::RVec<FCCAnalysesComposite2> D0,
-                  ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0);
+                  ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0,
+                  ROOT::VecOps::RVec<float>& thrust,
+                  bool mass_cut=false,
+                  bool momentum_cut=true);
+
+  ROOT::VecOps::RVec<int> get_daughter_index_from_B0Candidate(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0Candidate, int daughter_index);
+
+  ROOT::VecOps::RVec<int> variable_access_B0_Daughters_int(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<int>& daughter_integer_variable);
+
+  ROOT::VecOps::RVec<float> variable_access_B0_Daughters_flt(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<float>& daughter_integer_variable);
+
+  ROOT::VecOps::RVec<int> indRP_matched_to_list( ROOT::VecOps::RVec<int>&  mcParticles_indices,
+						 ROOT::VecOps::RVec<int>& recind,
+						 ROOT::VecOps::RVec<int>& mcind,
+						 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& reco,
+						 ROOT::VecOps::RVec<edm4hep::MCParticleData>& mc);
+
+  bool array_searcher(int index, ROOT::VecOps::RVec<int> index_array);
+
+  ROOT::VecOps::RVec<int> truthmatch_D0(ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex);
+
+  ROOT::VecOps::RVec<int> truthmatch_Pi0(ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices);
+
+  ROOT::VecOps::RVec<int> truthmatch_B0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices); 
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
 									     ROOT::VecOps::RVec<int> ind);
 
-  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>
-  merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in);
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> merge_VertexObjet(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> in);
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> get_VertexObject(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
 									 ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
@@ -222,6 +252,11 @@ namespace myUtils{
 					 int mother,
 					 int grandmother);
 
+  
+  ROOT::VecOps::RVec<int> getFCCAnalysesComposite_vtxind(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtxFDinfo(ROOT::VecOps::RVec<FCCAnalysesComposite2> in, ROOT::VecOps::RVec<float> FD_info);
+
 
   bool isPV(edm4hep::ReconstructedParticleData recop,
 	    ROOT::VecOps::RVec<int> pvindex);
@@ -307,9 +342,35 @@ namespace myUtils{
 						      int index,
 						      int type);
 
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_E(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_E(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);  
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Pt(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Pt(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_charge(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
 
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_vertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_position(ROOT::VecOps::RVec<FCCAnalysesComposite2> in, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces, int i);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_position_err(ROOT::VecOps::RVec<FCCAnalysesComposite2> in, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces, int i);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_vtx_chi2(ROOT::VecOps::RVec<FCCAnalysesComposite2> in, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> verteces);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Phi(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Phi(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Eta(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Eta(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Theta(ROOT::VecOps::RVec<FCCAnalysesComposite> in);
+
+  ROOT::VecOps::RVec<float> getFCCAnalysesComposite_Theta(ROOT::VecOps::RVec<FCCAnalysesComposite2> in);
 
   ROOT::VecOps::RVec<int> getFCCAnalysesComposite_mcvertex(ROOT::VecOps::RVec<FCCAnalysesComposite2> in,
 							   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
@@ -419,6 +480,78 @@ namespace myUtils{
 								ROOT::VecOps::RVec<float> thrust);
 
   int has_anglethrust_emin(ROOT::VecOps::RVec<float> angle);
+
+  ROOT::VecOps::RVec<int> D0_and_Pi0_same_hemisphere(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+								ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<float>& thrust);
+
+  int D0_and_Pi0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesComposite2& D0,
+								FCCAnalysesComposite& Pi0, ROOT::VecOps::RVec<float>& thrust);
+
+  TVector3 get_MC_PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+                ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
+                ROOT::VecOps::RVec<int> mcind);
+
+  float get_B0D0_FD_x(TVector3 PV, edm4hep::MCParticleData K);
+
+  float get_B0D0_FD_y(TVector3 PV, edm4hep::MCParticleData K);
+
+  float get_B0D0_FD_z(TVector3 PV, edm4hep::MCParticleData K);
+
+  float get_B0D0_FD(TVector3 PV, edm4hep::MCParticleData K);
+
+  VertexingUtils::FCCAnalysesVertex get_PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex);
+
+  ROOT::VecOps::RVec<float> get_IP(VertexingUtils::FCCAnalysesVertex PV, ROOT::VecOps::RVec<FCCAnalysesComposite2> D0, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertices);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_D0Tracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, 
+    ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0Candidates, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> get_D0Tracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,
+    FCCAnalysesComposite2& D0, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>  ReconstructedD0( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>&  tracks_vectors, bool AddMassConstraints);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks_vectors, bool AddMassConstraints);
+
+  ROOT::VecOps::RVec<TVector3> Momentum_ReconstructedD0( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& D0_pseudoTracks, bool is_neutral=true);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_photon_fake_tracks_from_Pi0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0Candidates);
+
+  ROOT::VecOps::RVec<float> component_access( ROOT::VecOps::RVec<TVector3> TVectors , int component );
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> get_photon_fake_tracks_from_Pi0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,FCCAnalysesComposite& Pi0);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex(ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex_pi0(ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+
+  ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> B0_Vertex_fitter(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks, int num_tracks);
+
+  ROOT::VecOps::RVec<int> B0_Vertex_n_tracks(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks);
+
+  ROOT::VecOps::RVec<edm4hep::VertexData> B0_Vertex_getter(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& B0_vertices);
+
+  ROOT::VecOps::RVec<float> B0_Vertex_position(ROOT::VecOps::RVec<edm4hep::VertexData>& B0_vertices, int componant);
+
+  ROOT::VecOps::RVec<float> B0_Vertex_chi2(ROOT::VecOps::RVec<edm4hep::VertexData>& B0_vertices);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedPi0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit_pi0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+
+  float get_B0_MCVertex_x(edm4hep::MCParticleData D0);
+
+  float get_B0_MCVertex_y(edm4hep::MCParticleData D0);
+
+  float get_B0_MCVertex_z(edm4hep::MCParticleData D0);
+
+  float get_B0_MCVertex(edm4hep::MCParticleData D0);
+
+  ROOT::VecOps::RVec<float> get_opening_angle(ROOT::VecOps::RVec<float> Px1, ROOT::VecOps::RVec<float> Px2, ROOT::VecOps::RVec<float>Py1, ROOT::VecOps::RVec<float> Py2, ROOT::VecOps::RVec<float>Pz1, ROOT::VecOps::RVec<float> Pz2, ROOT::VecOps::RVec<float> P1, ROOT::VecOps::RVec<float> P2);
 
 }//end NS myUtils
 

@@ -126,7 +126,7 @@ namespace ReconstructedParticle2MC{
 									 ROOT::VecOps::RVec<edm4hep::MCParticleData> mc) ;
 
   /// select ReconstructedParticles matched to the (stable) MC particles whose indices are passed in a list
-  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> selRP_matched_to_list( ROOT::VecOps::RVec<int>   mcParticles_indices,
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>selRP_matched_to_list ( ROOT::VecOps::RVec<int>   mcParticles_indices,
 										ROOT::VecOps::RVec<int> recind,
 										ROOT::VecOps::RVec<int> mcind,
 										ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> reco,
