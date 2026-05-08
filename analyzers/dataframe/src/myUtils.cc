@@ -1914,6 +1914,45 @@ ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<Vertexi
   return result;
 }
 
+ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Ks2PiPi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> result;
+
+  int counter=0;
+  for (auto &p:vertex){
+    //not consider PV
+    if (p.vertex.primary==1){counter+=1;continue;}
+    //exactly 2 tracks
+    if (p.ntracks!=2){counter+=1;continue;}
+
+    //2 tracks id as Pi+ Pi-
+    int charge_PiPi=0;
+    int nobj_PiPi=0;
+    for (auto &r:p.reco_ind){
+      if (recop.at(r).type==211){
+        nobj_PiPi+=1;
+        charge_PiPi+=recop.at(r).charge;
+      }
+    }
+
+    if (nobj_PiPi!=2){counter+=1; continue;}
+
+    if (charge_PiPi!=0){counter+=1; continue;}
+
+    FCCAnalysesComposite2 comp;
+    comp.vertex = counter;
+    comp.particle = build_tlv(recop,p.reco_ind);
+    comp.charge = charge_PiPi;
+    /*if (mass_cut){
+      if (fabs(comp.particle.M()-1.86483)>0.012){counter+=1; continue;}
+    }*/
+    result.push_back(comp);
+    counter+=1;
+  }
+  return result;
+}
+
 ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut, bool momentum_cut){
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> result;
@@ -2143,6 +2182,87 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> build_B02D0Pi0(ROOT::VecOps::RVec<Verte
   return result;
 }
 
+ROOT::VecOps::RVec<FCCAnalysesComposite> build_Bs02D0Ks0(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
+                ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop,
+								ROOT::VecOps::RVec<FCCAnalysesComposite2> D0,
+								ROOT::VecOps::RVec<FCCAnalysesComposite2> Ks0, 
+                ROOT::VecOps::RVec<float>& thrust,
+                bool mass_cut, 
+                bool momentum_cut
+              ){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> result;
+
+  for (size_t i = 0; i < D0.size(); ++i) {
+    const int& d0vertex = D0.at(i).vertex;
+    const int& d0index1 = vertex[d0vertex].reco_ind[0];
+    const int& d0index2 = vertex[d0vertex].reco_ind[1];
+    float kaoncharge = 0;
+    float kaonnumber = 0;
+    //std::cout << "index sise "<< d0index.size() << " ind 0 " << d0index.at(0)<< " ind 1 " << d0index.at(1)  <<std::endl;
+    //std::cout << " recop.at(index.at(0)) "<<recop.at(d0index.at(0)).type<< " recop.at(index.at(1)) "<<recop.at(d0index.at(1)).type<< std::endl;
+
+    if (recop.at(d0index1).type==321){
+      kaoncharge+=recop.at(d0index1).charge;
+      kaonnumber+=1;
+    }
+    if (recop.at(d0index2).type==321){
+      kaoncharge+=recop.at(d0index2).charge;
+      kaonnumber+=1;
+    }
+    if (kaoncharge!=0 || kaonnumber!=2) std::cout <<"huston there is a problem two oppositiely charged kaons not found in build_B02D0Pi0" <<std::endl;
+
+    for (size_t j = 0; j < Ks0.size(); ++j) {
+      const int& Ks0vertex = Ks0.at(j).vertex;
+      const int& Ks0index1 = vertex[Ks0vertex].reco_ind[0];
+      const int& Ks0index2 = vertex[Ks0vertex].reco_ind[1];
+      float pioncharge = 0;
+      float pionnumber = 0;
+      //std::cout << "index sise "<< d0index.size() << " ind 0 " << d0index.at(0)<< " ind 1 " << d0index.at(1)  <<std::endl;
+      //std::cout << " recop.at(index.at(0)) "<<recop.at(d0index.at(0)).type<< " recop.at(index.at(1)) "<<recop.at(d0index.at(1)).type<< std::endl;
+
+      if (recop.at(Ks0index1).type==211){
+        pioncharge+=recop.at(Ks0index1).charge;
+        pionnumber+=1;
+      }
+      if (recop.at(Ks0index2).type==211){
+        pioncharge+=recop.at(Ks0index2).charge;
+        pionnumber+=1;
+      }
+      if (pioncharge!=0 || pionnumber!=2) std::cout <<"huston there is a problem two oppositiely charged pions not found in build_B02D0Pi0" <<std::endl;
+
+
+      TLorentzVector tlvd0   = D0.at(i).particle;
+      TLorentzVector tlvKs0   = Ks0.at(j).particle;
+      TLorentzVector tlvBs = tlvKs0+tlvd0;
+
+      if (mass_cut){
+        //if(tlvB.M()>5.9 || tlvB.M()<4.7)continue;
+      }
+      if (momentum_cut){
+        //if (tlvB.P() < 12)continue;
+      }
+
+      FCCAnalysesComposite Bs;
+      ROOT::VecOps::RVec<int> index;
+      index.push_back(i);
+      index.push_back(d0index1);
+      index.push_back(d0index2);
+      index.push_back(j);
+      index.push_back(Ks0index1);
+      index.push_back(Ks0index1);
+      Bs.particle = tlvBs;
+      Bs.index = index;
+
+      if(D0_and_Ks0_same_hemisphere(Bs, D0.at(i), Ks0.at(j), thrust)==0)continue;
+
+      result.push_back(Bs);
+    }
+  }
+
+  return result;
+}
+
 ROOT::VecOps::RVec<int> get_daughter_index_from_B0Candidate(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0Candidate, int daughter_index){
 
   ROOT::VecOps::RVec<int> results;
@@ -2180,11 +2300,59 @@ ROOT::VecOps::RVec<float> variable_access_B0_Daughters_flt(ROOT::VecOps::RVec<in
 
   for(auto& i: index_of_daughter){
 
-    float variable_value; 
+    if(i == -999){
 
-    variable_value = daughter_integer_variable.at(i);
+      results.push_back(-999);
+      
+    } else{
 
-    results.push_back(variable_value);
+      float variable_value; 
+
+      variable_value = daughter_integer_variable.at(i);
+
+      results.push_back(variable_value);
+    
+    }
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite2> D0_particle_access_B0_Daughters(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_Candidates){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite2> results; 
+
+  for(auto& i: index_of_daughter){
+
+    FCCAnalysesComposite2 D0; 
+
+    D0 = D0_Candidates.at(i);
+
+    results.push_back(D0);
+    
+    
+
+  }
+
+  return results; 
+
+}
+
+ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::VecOps::RVec<int>& index_of_daughter, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_Candidates){
+
+  ROOT::VecOps::RVec<FCCAnalysesComposite> results; 
+
+  for(auto& i: index_of_daughter){
+
+  
+    FCCAnalysesComposite Pi0; 
+
+    Pi0 = Pi0_Candidates.at(i);
+
+    results.push_back(Pi0);
+    
 
   }
 
@@ -2327,6 +2495,58 @@ ROOT::VecOps::RVec<int> truthmatch_B0(ROOT::VecOps::RVec<FCCAnalysesComposite>& 
 
 }
 
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> B0_granddaughter_MCindex(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& recind, ROOT::VecOps::RVec<int>&mcind){
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> results;
+
+  ROOT::VecOps::RVec<int> fail = {-999,-999,-999,-999};
+
+  for (size_t i = 0; i < B0.size(); ++i) {
+
+    ROOT::VecOps::RVec<int> result = fail;
+    int counter=0;
+
+    const int& B0index1 = B0.at(i).index.at(1);
+    const int& B0index2 = B0.at(i).index.at(2);
+    const int& B0index3 = B0.at(i).index.at(4);
+    const int& B0index4 = B0.at(i).index.at(5);
+
+    for (int j=0; j<recind.size();j++) {
+      int reco_idx = recind.at(j);
+      int mc_idx = mcind.at(j);
+      if (reco_idx == B0index1 && result[0] == -999) { result[0] = mc_idx; counter++; }
+      if (reco_idx == B0index2 && result[1] == -999) { result[1] = mc_idx; counter++; }
+      if (reco_idx == B0index3 && result[2] == -999) { result[2] = mc_idx; counter++; }
+      if (reco_idx == B0index4 && result[3] == -999) { result[3] = mc_idx; counter++; }
+
+      if (counter ==4) break;
+    
+    }
+
+    if (counter != 4){
+      result = fail; // wipe partial matches
+    }
+
+    results.push_back(result);
+
+  }
+  
+  return results;
+
+}
+
+ROOT::VecOps::RVec<int> B0_granddaughter_MCindex_accessor(ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> MC_ind, int index_access){
+
+  ROOT::VecOps::RVec<int> results;
+
+  for(auto& array: MC_ind){
+    results.push_back(array.at(index_access));
+  }
+
+  return results;
+
+}
+
 ROOT::VecOps::RVec<int> D0_and_Pi0_same_hemisphere(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
 								ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<float>& thrust){
 
@@ -2370,6 +2590,57 @@ int D0_and_Pi0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesC
   float Pi0_angle = cand_Pi0.Angle(thrustvec);
 
   if ((cos(D0_angle)*cos(Pi0_angle))>0){
+    result=1;
+  } else {
+    result=0;
+  }
+  return result;
+
+}
+
+ROOT::VecOps::RVec<int> D0_and_Ks0_same_hemisphere(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+								ROOT::VecOps::RVec<FCCAnalysesComposite2>& Ks0_candidates, ROOT::VecOps::RVec<float>& thrust){
+
+  ROOT::VecOps::RVec<int> result;
+
+  for(size_t i = 0; i < B0_candidates.size(); ++i){
+
+    int D0index = B0_candidates.at(i).index.at(0);
+    int Ks0index = B0_candidates.at(i).index.at(3);
+
+    FCCAnalysesComposite2 D0 = D0_candidates.at(D0index);
+    FCCAnalysesComposite2 Ks0 = Ks0_candidates.at(Ks0index);
+
+    TVector3 thrustvec(thrust.at(1),thrust.at(3),thrust.at(5));
+    TVector3 cand_D0(D0.particle.X(),D0.particle.Y(),D0.particle.Z());
+    float D0_angle = cand_D0.Angle(thrustvec);
+    TVector3 cand_Ks0(Ks0.particle.X(),Ks0.particle.Y(),Ks0.particle.Z());
+    float Ks0_angle = cand_Ks0.Angle(thrustvec);
+
+    if ((cos(D0_angle)*cos(Ks0_angle))>0){
+      result.push_back(1);
+    } else {
+      result.push_back(0);
+    }
+
+  }
+
+  return result;
+
+}
+
+int D0_and_Ks0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesComposite2& D0,
+								FCCAnalysesComposite2& Ks0, ROOT::VecOps::RVec<float>& thrust){
+
+  int result;
+
+  TVector3 thrustvec(thrust.at(1),thrust.at(3),thrust.at(5));
+  TVector3 cand_D0(D0.particle.X(),D0.particle.Y(),D0.particle.Z());
+  float D0_angle = cand_D0.Angle(thrustvec);
+  TVector3 cand_Ks0(Ks0.particle.X(),Ks0.particle.Y(),Ks0.particle.Z());
+  float Ks0_angle = cand_Ks0.Angle(thrustvec);
+
+  if ((cos(D0_angle)*cos(Ks0_angle))>0){
     result=1;
   } else {
     result=0;
