@@ -550,9 +550,14 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
 
   ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex_pi0(ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0);
 
+  ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_Bs0_vertex(ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0, ROOT::VecOps::RVec<edm4hep::TrackState> ReconstructedKs0);
+
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
         ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> Bs0_vertex_fit(ROOT::VecOps::RVec<FCCAnalysesComposite>& Bs0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& Ks0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
+  
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> B0_Vertex_fitter(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks, int num_tracks);
 
   ROOT::VecOps::RVec<int> B0_Vertex_n_tracks(ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& B0_tracks);
@@ -564,6 +569,10 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
   ROOT::VecOps::RVec<float> B0_Vertex_chi2(ROOT::VecOps::RVec<edm4hep::VertexData>& B0_vertices);
 
   ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedPi0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints);
+
+  ROOT::VecOps::RVec<edm4hep::TrackState>  Reconstructed2BodyDecay( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints, double daughter1_mass, double daughter2_mass, double parent_mass);
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>  Reconstructed2BodyDecay( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>&  tracks, bool AddMassConstraints, double daughter1_mass, double daughter2_mass, double parent_mass);
 
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit_pi0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
         ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);

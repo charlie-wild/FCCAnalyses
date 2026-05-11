@@ -3385,6 +3385,83 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>  ReconstructedD0( RO
 
 }
 
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>  Reconstructed2BodyDecay( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>&  tracks_vectors, bool AddMassConstraints, double daughter1_mass, double daughter2_mass, double parent_mass) {
+
+
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result;
+
+  for(const auto& tracks: tracks_vectors){
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> candidate_result;
+
+    int Ntr = tracks.size();
+    if ( Ntr != 2 ){
+      candidate_result.push_back({});
+      result.push_back(candidate_result);
+      continue;
+    }
+ 
+    TVectorD** trkPar = new TVectorD*[Ntr];
+    TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
+
+    bool Units_mm = true;
+
+    for (Int_t i = 0; i < Ntr; i++) {
+      edm4hep::TrackState t = tracks[i] ;
+      TVectorD par = FCCAnalyses::VertexingUtils::get_trackParam( t, Units_mm ) ;
+      trkPar[i] = new TVectorD( par );
+      TMatrixDSym Cov = FCCAnalyses::VertexingUtils::get_trackCov( t, Units_mm );
+      trkCov[i] = new TMatrixDSym ( Cov );
+    }
+
+    VertexFit theVertexFit( Ntr, trkPar, trkCov );
+    TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
+
+    VertexFit* vertexfit = &theVertexFit;
+    VertexMore vertexmore( vertexfit, Units_mm );
+
+    if ( AddMassConstraints ) {
+
+      double daughter_masses[2] = { daughter1_mass, daughter2_mass };
+      int list[2] = { 0, 1};
+      vertexmore.AddMassConstraint(parent_mass, 2, daughter_masses, list);   // D0 mass constraint
+
+      vertexmore.MassConstrFit();
+    }
+
+    TVectorD  Parent_track_param  = vertexmore.GetVpar();
+
+    TMatrixDSym cov = vertexmore.GetVcov();
+    if (Parent_track_param.GetNrows() < 5) {
+        candidate_result.push_back({});
+        result.push_back(candidate_result);
+        continue;
+    }
+    TVectorD  Parent_track_param_edm4hep = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam( Parent_track_param, Units_mm );
+    edm4hep::TrackState track;
+    track.D0  = Parent_track_param_edm4hep[0] ;
+    track.phi = Parent_track_param_edm4hep[1];
+    track.omega  = Parent_track_param_edm4hep[2];
+    track.Z0  = Parent_track_param_edm4hep[3] ;
+    track.tanLambda = Parent_track_param_edm4hep[4] ;
+
+    // now the covariance matrix - lower-triangle :
+
+    TMatrixDSym covM(5);
+    std::array<float, 21> covMatrix = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( cov, Units_mm )  ;
+
+    track.covMatrix = covMatrix ;
+
+    candidate_result.push_back(  track );
+
+    result.push_back(candidate_result);
+
+  }
+
+  return result;
+
+}
+
 ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints) {
 
 
@@ -3441,6 +3518,73 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0( ROOT::VecOps::RVec<edm
   track.omega  = D0_track_param_edm4hep[2];
   track.Z0  = D0_track_param_edm4hep[3] ;
   track.tanLambda = D0_track_param_edm4hep[4] ;
+
+  // now the covariance matrix - lower-triangle :
+
+  TMatrixDSym covM(5);
+  std::array<float, 21> covMatrix = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackCovMatrix( cov, Units_mm )  ;
+
+  track.covMatrix = covMatrix ;
+
+  result.push_back(track);
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<edm4hep::TrackState>  Reconstructed2BodyDecay( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks, bool AddMassConstraints, double daughter1_mass, double daughter2_mass, double parent_mass) {
+
+
+  ROOT::VecOps::RVec<edm4hep::TrackState> result;
+
+  int Ntr = tracks.size();
+  if ( Ntr != 2 ){
+    result.push_back({});
+    return result;
+  }
+
+  TVectorD** trkPar = new TVectorD*[Ntr];
+  TMatrixDSym** trkCov = new TMatrixDSym*[Ntr];
+
+  bool Units_mm = true;
+
+  for (Int_t i = 0; i < Ntr; i++) {
+    edm4hep::TrackState t = tracks[i] ;
+    TVectorD par = FCCAnalyses::VertexingUtils::get_trackParam( t, Units_mm ) ;
+    trkPar[i] = new TVectorD( par );
+    TMatrixDSym Cov = FCCAnalyses::VertexingUtils::get_trackCov( t, Units_mm );
+    trkCov[i] = new TMatrixDSym ( Cov );
+  }
+
+  VertexFit theVertexFit( Ntr, trkPar, trkCov );
+  TVectorD  x = theVertexFit.GetVtx() ;   // this actually runs the fit
+
+  VertexFit* vertexfit = &theVertexFit;
+  VertexMore vertexmore( vertexfit, Units_mm );
+
+  if ( AddMassConstraints ) {
+
+    double daughter_masses[2] = { daughter1_mass, daughter2_mass };
+    int list[2] = { 0, 1};
+    vertexmore.AddMassConstraint(parent_mass, 2, daughter_masses, list);   // D0 mass constraint
+
+    vertexmore.MassConstrFit();
+  }
+
+  TVectorD  Parent_track_param  = vertexmore.GetVpar();
+
+  TMatrixDSym cov = vertexmore.GetVcov();
+  if (Parent_track_param.GetNrows() < 5) {
+      result.push_back({});
+      return result;
+  }
+  TVectorD  Parent_track_param_edm4hep = FCCAnalyses::VertexingUtils::Delphes2Edm4hep_TrackParam( Parent_track_param, Units_mm );
+  edm4hep::TrackState track;
+  track.D0  = Parent_track_param_edm4hep[0] ;
+  track.phi = Parent_track_param_edm4hep[1];
+  track.omega  = Parent_track_param_edm4hep[2];
+  track.Z0  = Parent_track_param_edm4hep[3] ;
+  track.tanLambda = Parent_track_param_edm4hep[4] ;
 
   // now the covariance matrix - lower-triangle :
 
@@ -3680,6 +3824,20 @@ ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex(
  return result;
 }
 
+ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_Bs0_vertex(
+                                ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,
+                                ROOT::VecOps::RVec<edm4hep::TrackState> ReconstructedKs0) {
+
+ ROOT::VecOps::RVec<edm4hep::TrackState>  result;
+ if ( ReconstructedD0.size() != 1 ) return result;
+ if ( ReconstructedKs0.size() != 1 )  return result;
+
+ result.push_back( ReconstructedD0[0])  ;  // the pseudo-D0 track
+ result.push_back( ReconstructedKs0[0])  ;    // the pseudo-Ks0 track
+
+ return result;
+}
+
 ROOT::VecOps::RVec<edm4hep::TrackState>  tracks_for_fitting_the_B0_vertex_pi0(
                                 ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0,
                                 ROOT::VecOps::RVec<edm4hep::TrackState> BachelorPi0) {
@@ -3711,6 +3869,32 @@ ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> B0_vertex_fit(ROOT::
     ROOT::VecOps::RVec<edm4hep::TrackState> B0_tracks = tracks_for_fitting_the_B0_vertex(D0_reconstructed_track, Pi0_fake_tracks);
 
     result.push_back(B0_tracks);
+
+
+  }
+
+  return result;
+
+}
+
+ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> Bs0_vertex_fit(ROOT::VecOps::RVec<FCCAnalysesComposite>& Bs0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& Ks0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
+        ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recopatvtx, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks){
+  
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> result;
+
+  for(const auto& Bs0 : Bs0_candidates){
+    
+    FCCAnalysesComposite2& Ks0 = Ks0_candidates.at(Bs0.index[3]);
+    FCCAnalysesComposite2& D0 = D0_candidates.at(Bs0.index[0]);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_tracks = get_D0Tracks(vertex, recopatvtx, D0, tracks);
+    ROOT::VecOps::RVec<edm4hep::TrackState> D0_reconstructed_track = Reconstructed2BodyDecay( D0_tracks, true, 4.9367700e-01, 4.9367700e-01, 1.86484);
+    ROOT::VecOps::RVec<edm4hep::TrackState> Ks0_tracks = get_D0Tracks(vertex, recopatvtx, Ks0, tracks);
+    ROOT::VecOps::RVec<edm4hep::TrackState> Ks0_reconstructed_track = Reconstructed2BodyDecay( Ks0_tracks, true, 1.3957039e-01, 1.3957039e-01, 4.97611e-01);
+
+    ROOT::VecOps::RVec<edm4hep::TrackState> Bs0_tracks = tracks_for_fitting_the_Bs0_vertex(D0_reconstructed_track, Ks0_reconstructed_track);
+
+    result.push_back(Bs0_tracks);
 
 
   }
