@@ -101,12 +101,12 @@ namespace myUtils{
 							  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_D02KK(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
-								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut=true);
+								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, ROOT::VecOps::RVec<float>& thrust, bool mass_cut=true);
 
   ROOT::VecOps::RVec<FCCAnalysesComposite2> build_Ks2PiPi(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
 								   ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut=false);
 
-  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, bool mass_cut=true, bool momentum_cut=true);
+  ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop, ROOT::VecOps::RVec<float>& thrust, bool mass_cut=true, bool momentum_cut=true);
 
   ROOT::VecOps::RVec<FCCAnalysesComposite> build_Pi02photonphoton_wider(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> recop);
 
@@ -156,8 +156,12 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
 
   ROOT::VecOps::RVec<int> truthmatch_B0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices); 
 
+  ROOT::VecOps::RVec<int> truthmatch_B0(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& RP_truthmatched_indices, int granddaughter);
+
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> B0_granddaughter_MCindex(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0, ROOT::VecOps::RVec<int>& recind, ROOT::VecOps::RVec<int>&mcind);
   
+  ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> Pi0_daughter_MCindex(ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0, ROOT::VecOps::RVec<int>& recind, ROOT::VecOps::RVec<int>&mcind);
+
   ROOT::VecOps::RVec<int> B0_granddaughter_MCindex_accessor(ROOT::VecOps::RVec<ROOT::VecOps::RVec<int>> MC_ind, int index_access);
 
   ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> get_MCVertexObject(ROOT::VecOps::RVec<edm4hep::MCParticleData> mc,
@@ -506,11 +510,15 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
   int D0_and_Pi0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesComposite2& D0,
 								FCCAnalysesComposite& Pi0, ROOT::VecOps::RVec<float>& thrust);
 
+  int B0_and_recop_same_hemisphere(edm4hep::ReconstructedParticleData& recop_signal, edm4hep::ReconstructedParticleData& recop, ROOT::VecOps::RVec<float>& thrust);
+
   ROOT::VecOps::RVec<int> D0_and_Ks0_same_hemisphere(ROOT::VecOps::RVec<FCCAnalysesComposite>& B0_candidates, ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0_candidates,
 								ROOT::VecOps::RVec<FCCAnalysesComposite2>& Ks0_candidates, ROOT::VecOps::RVec<float>& thrust);
 
   int D0_and_Ks0_same_hemisphere(FCCAnalysesComposite& B0_candidates, FCCAnalysesComposite2& D0,
 								FCCAnalysesComposite2& Ks0, ROOT::VecOps::RVec<float>& thrust);
+
+  int recop1_and_recop2_same_hemisphere(edm4hep::ReconstructedParticleData& recop1, edm4hep::ReconstructedParticleData& recop2, ROOT::VecOps::RVec<float>& thrust);
 
   TVector3 get_MC_PV(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertex,
                 ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertexMC> mcver,
@@ -528,6 +536,8 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
 
   ROOT::VecOps::RVec<float> get_IP(VertexingUtils::FCCAnalysesVertex PV, ROOT::VecOps::RVec<FCCAnalysesComposite2> D0, ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex> vertices);
 
+  ROOT::VecOps::RVec<float> get_charged_track_IP(VertexingUtils::FCCAnalysesVertex PV,ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> tracks);
+
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_D0Tracks(ROOT::VecOps::RVec<VertexingUtils::FCCAnalysesVertex>& vertex, ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, 
     ROOT::VecOps::RVec<FCCAnalysesComposite2>& D0Candidates, ROOT::VecOps::RVec<edm4hep::TrackState>& tracks);
 
@@ -539,6 +549,8 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
   ROOT::VecOps::RVec<edm4hep::TrackState>  ReconstructedD0( ROOT::VecOps::RVec<edm4hep::TrackState>&  tracks_vectors, bool AddMassConstraints);
 
   ROOT::VecOps::RVec<TVector3> Momentum_ReconstructedD0( ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>>& D0_pseudoTracks, bool is_neutral=true);
+
+  ROOT::VecOps::RVec<TVector3> Momentum_ReconstructedD0( ROOT::VecOps::RVec<edm4hep::TrackState>& D0_pseudoTracks, bool is_neutral=true);
 
   ROOT::VecOps::RVec<ROOT::VecOps::RVec<edm4hep::TrackState>> get_photon_fake_tracks_from_Pi0(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,ROOT::VecOps::RVec<FCCAnalysesComposite>& Pi0Candidates);
 
@@ -586,6 +598,12 @@ ROOT::VecOps::RVec<FCCAnalysesComposite> Pi0_particle_access_B0_Daughters(ROOT::
   float get_B0_MCVertex(edm4hep::MCParticleData D0);
 
   ROOT::VecOps::RVec<float> get_opening_angle(ROOT::VecOps::RVec<float> Px1, ROOT::VecOps::RVec<float> Px2, ROOT::VecOps::RVec<float>Py1, ROOT::VecOps::RVec<float> Py2, ROOT::VecOps::RVec<float>Pz1, ROOT::VecOps::RVec<float> Pz2, ROOT::VecOps::RVec<float> P1, ROOT::VecOps::RVec<float> P2);
+
+  ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData> get_non_signal_charged_tracks(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop, ROOT::VecOps::RVec<int> indices_to_remove, ROOT::VecOps::RVec<float>& thrust);
+  
+  ROOT::VecOps::RVec<float> get_non_signal_charged_tracks_var(ROOT::VecOps::RVec<edm4hep::ReconstructedParticleData>& recop,ROOT::VecOps::RVec<int> indices_to_remove,ROOT::VecOps::RVec<float>& thrust, ROOT::VecOps::RVec<float>& variable);
+  
+  ROOT::VecOps::RVec<int> get_all_indices(int pdg_mother, std::vector<int> pdg_daughters, bool stableDaughters, bool chargeConjugateMother, bool chargeConjugateDaughters, bool inclusiveDecay,  ROOT::VecOps::RVec<edm4hep::MCParticleData> in,  ROOT::VecOps::RVec<int> ind);
 
 }//end NS myUtils
 
